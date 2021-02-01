@@ -119,7 +119,7 @@ def gen_pattern(chars):
         if(end > 1):
             total += "\n"
      
-    return total
+    print(total)
 
 def test4():
     tc = unittest.TestCase()
