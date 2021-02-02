@@ -2,6 +2,8 @@ import unittest
 import sys
 from contextlib import contextmanager
 from io import StringIO
+from operator import or_
+from symbol import or_test
 
 #################################################################################
 # TESTING OUTPUTS
@@ -22,7 +24,17 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
+    if(n<0):
+        return 'Number should not be negative'
+    else:
+        sum = 0
+        for i in range(1,n): 
+            if (n % i == 0):
+                sum+=i
+        if(sum == n):
+            return True
+        else:
+            return False 
 
 # (3 points)
 def test1():
@@ -40,7 +52,14 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    if(n<0):
+        return False
+    else:
+        sum = 0
+        for i in range(1,n): 
+            if (i % 3 == 0 or i % 5 == 0):
+                sum+=i
+        return sum
 
 # (3 points)
 def test2():
@@ -53,7 +72,11 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    pass
+    array = [(n1, n2, (p-n1-n2))
+    for n1 in range (1,p)
+        for n2 in range (n1, p-n1)
+            if ((n1**2)+(n2**2) == ((p-n1-n2)**2))]
+    return len(array)
 
 def test3():
     tc = unittest.TestCase()
@@ -67,7 +90,36 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    total = ''''''
+    start =0
+    end = 1
+    
+    def print_back(word):
+        total = ""
+        if(len(word)==1):
+            return total
+        else:
+            for i in word[len(word)-2::-1]:
+                total += i
+        return total
+  
+    reverseChar = chars[::-1]
+    while end <= len(chars):
+        newChars = reverseChar[start:end]
+        total += ('.'.join(newChars + print_back(newChars))).center(len(chars)*4-3, '.') 
+        if(len(total) > 1):
+            total += "\n"
+        end +=1
+    
+    end -=1
+    while end > 1:
+        end -=1
+        newChars = reverseChar[start:end]
+        total += ('.'.join(newChars + print_back(newChars))).center(len(chars)*4-3, '.')
+        if(end > 1):
+            total += "\n"
+     
+    print(total)
 
 def test4():
     tc = unittest.TestCase()
