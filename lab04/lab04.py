@@ -179,7 +179,7 @@ class ArrayList:
             if self.data[i] == value:
                 self.data.remove(value)
                 self.len -= 1
-                break
+                return
         raise ValueError
         ### END SOLUTION
 
@@ -206,8 +206,7 @@ class ArrayList:
         for i in range(len(self.data)):
             if self.data[i] == value:
                 return True
-            else:
-                return False
+        return False
         ### END SOLUTION
 
 
@@ -216,7 +215,7 @@ class ArrayList:
     def __len__(self):
         """Implements `len(self)`"""
         ### BEGIN SOLUTION
-        return len(self.data)
+        return self.len
         ### END SOLUTION
 
     def min(self):
@@ -234,7 +233,7 @@ class ArrayList:
         ### BEGIN SOLUTION
         most = self.data[0]
         for i in range(len(self.data)):
-            if self.data[i] < most:
+            if self.data[i] > most:
                 most = self.data[i]
         return most
         ### END SOLUTION
@@ -275,12 +274,12 @@ class ArrayList:
         instance that contains the values in this list followed by those
         of other."""
         ### BEGIN SOLUTION
-        newArrayList = newArrayList(self.len + len(other))
+        newList = ArrayList()
         for i in range(self.len):
-            newArrayList[i] = self.data[i]
+            newList.append(self.data[i])
         for i in other:
-            newArrayList.append(i)
-        return newArrayList
+            newList.append(i)
+        return newList
         ### END SOLUTION
 
     def clear(self):
@@ -291,8 +290,8 @@ class ArrayList:
         """Returns a new ArrayList instance (with a separate data store), that
         contains the same values as this list."""
         ### BEGIN SOLUTION
-        newArrayList = newArrayList(self.len)
-        for i in range(len(self.data)):
+        newArrayList = ArrayList()
+        for i in range(self.len):
             newArrayList[i] = self.data[i]
         return newArrayList
         ### END SOLUTION
@@ -300,12 +299,8 @@ class ArrayList:
     def extend(self, other):
         """Adds all elements, in order, from other --- an Iterable --- to this list."""
         ### BEGIN SOLUTION
-        temp = ConstrainedList(self.len + len(other))
-        for i in range(self.len):
-            temp[i] = self.data[i]
         for i in other:
-            temp.append(i)
-        self.data = temp
+            self.append(i)
         ### END SOLUTION
 
 
@@ -417,14 +412,9 @@ def test_case_3():
         lst.insert(ins_idx, to_ins)
 
     tc.assertEqual(data, arrayListToList(lst))
-    print(len(data))
-    print(len(lst))
     for _ in range(100):
         pop_idx = random.randrange(len(data))
         tc.assertEqual(data.pop(pop_idx), lst.pop(pop_idx))
-    print(len(data))
-    print(len(lst))
-
     tc.assertEqual(data, arrayListToList(lst))
 
     for _ in range(25):
@@ -464,7 +454,8 @@ def test_case_4():
     lst.data = ConstrainedList.create(range(100))
     lst.len = len(lst.data)
     tc.assertFalse(100 in lst)
-    print(lst)
+    bool = lst.__contains__(50)
+    print(bool)
     tc.assertTrue(50 in lst)
     suc()
 
@@ -582,7 +573,7 @@ def test_log(s):
 def main():
     test_case_1()
     test_case_2()
-    #test_case_3()
+    test_case_3()
     test_case_4()
     test_case_5()
     test_case_6()
