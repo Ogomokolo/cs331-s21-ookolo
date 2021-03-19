@@ -1,6 +1,10 @@
-from unittest import TestCase
 import random
+#<<<<<<< HEAD
 from nbformat import current
+#=======
+from unittest import TestCase
+
+#>>>>>>> branch 'master' of https://github.com/IITTeaching/cs331-s21-ookolo.git
 
 ################################################################################
 # Linked list class you should implement
@@ -270,9 +274,13 @@ class LinkedList:
             j = self.length
         newi = self._normalize_idx(i)
         newj = self._normalize_idx(j)
-        for x in range(newi, newj):
-            if self.data[x] == value:
-                return x
+        self.cursor_set(newi)
+        index = newi
+        for _ in range(newi, newj):
+            if self.cursor.val == value:
+                return index
+            self.cursor = self.cursor.next
+            index += 1
         raise ValueError
         ### END SOLUTION
 
@@ -345,6 +353,15 @@ class LinkedList:
         E.g., for [1,2,3] you should return [3,2,1].
         """
         ### BEGIN SOLUTION
+        reversedList = LinkedList()
+        reversedcurrent = reversedList.head
+        current = self.head.prior
+        for _ in range(self.length):
+            reversedList.append(current.val)
+            reversedcurrent = reversedcurrent.next
+            current = current.prior
+        return reversedList
+            
         ### END SOLUTION
 
 
@@ -680,20 +697,17 @@ def test_reverse():
 ################################################################################
 # MAIN
 def main():
-    test_subscript_access()
-    say_success()
-    test_custor_based_access()
-    say_success()
-    test_stringification()
-    say_success()
-    test_single_element_manipulation()
-    say_success()
-    test_predicates()
-    say_success()
-    test_bulk_operations()
-    say_success()
-    test_iteration()
-    say_success()
+    for t in [test_subscript_access,
+              test_custor_based_access,
+              test_stringification,
+              test_single_element_manipulation,
+              test_predicates,
+              test_queries,
+              test_bulk_operations,
+              test_iteration,
+              test_reverse]:
+         t()
+         say_success()
 
 if __name__ == '__main__':
     main()
