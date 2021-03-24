@@ -51,6 +51,16 @@ def check_delimiters(expr):
     delim_closers = '})]>'
 
     ### BEGIN SOLUTION
+    Stacklist = Stack()
+    for i in expr:
+        if delim_openers.__contains__(i):
+            Stacklist.push(i)
+        elif delim_closers.__contains__(i):
+            if (Stacklist.peek() is not None) and (delim_openers.index(Stacklist.peek()) == delim_closers.index(i)):
+                Stacklist.pop() 
+            else:
+                return False
+    return Stacklist.empty()
     ### END SOLUTION
 
 ################################################################################
@@ -121,6 +131,42 @@ def infix_to_postfix(expr):
     postfix = []
     toks = expr.split()
     ### BEGIN SOLUTION
+    for t in toks:
+        again = True
+        while again:
+            again = False
+            if t.isdigit():
+                postfix.append(t)
+
+            elif (ops.empty() or (ops.peek()=='(')):
+                    ops.push(t)
+
+            elif (t == '('):
+                ops.push(t)
+
+            elif (t == ')'):
+                temp = ops.pop()
+                while temp != '(':
+                    postfix.append(temp)
+                    temp = ops.pop()
+
+            elif (prec[t] > prec[ops.peek()]):
+                ops.push(t)
+
+            elif (prec[t] == prec[ops.peek()]):
+                postfix.append(ops.pop())
+                ops.push(t)
+
+            elif (prec[t] < prec[ops.peek()]):
+                postfix.append(ops.pop())
+                again = True
+        
+    while not ops.empty():
+        temp = ops.pop()
+        chars = "*+-/"
+        for i in chars:
+            if i == temp:
+                postfix.append(temp)
     ### END SOLUTION
     return ' '.join(postfix)
 
@@ -161,24 +207,71 @@ class Queue:
         self.head = -1
         self.tail = -1
 
-    ### BEGIN SOLUTION
-    ### END SOLUTION
-
-    def enqueue(self, val):
         ### BEGIN SOLUTION
         ### END SOLUTION
 
+    def enqueue(self, val):
+        ### BEGIN SOLUTION
+        if self.tail == len(self.data)-1: #if at last position, wrap
+            if self.data[0] == None: 
+                self.tail = 0
+                self.data[self.tail] = val
+            else:
+                raise RuntimeError
+            
+        elif self.data[self.tail + 1] == None: #if the one after the current one is None, you can append
+            self.tail +=1
+            self.data[self.tail] = val
+        else:
+            raise RuntimeError
+        ### END SOLUTION
+    
     def dequeue(self):
         ### BEGIN SOLUTION
+        if self.head == -1:
+            self.head=0
+        if self.data[self.head] != None:
+            if self.head == len(self.data)-1: #if at last position, wrap
+                to_ret = self.data[self.head]
+                self.data[self.head] = None
+                self.head = 0
+            else:    
+                to_ret = self.data[self.head]
+                self.data[self.head] = None
+                self.head +=1
+            if self.empty():
+                self.head = -1
+                self.tail = -1
+            return to_ret
+        else:
+            raise RuntimeError
         ### END SOLUTION
 
     def resize(self, newsize):
         assert(len(self.data) < newsize)
         ### BEGIN SOLUTION
+        new = []
+        
+        for i in self:
+            if i != None:
+                new.append(i)
+                    
+        self.head = 0
+        self.tail = len(new) -1
+        
+        while len(new) < newsize:
+            new.append(None)
+        self.data = new
         ### END SOLUTION
 
     def empty(self):
         ### BEGIN SOLUTION
+        for i in self.data:
+            if i == None:
+                pass
+            else:
+                return False
+        return True
         ### END SOLUTION
 
     def __bool__(self):
@@ -194,6 +287,24 @@ class Queue:
 
     def __iter__(self):
         ### BEGIN SOLUTION
+        start = self.head
+        if self.head > self.tail:
+            right = len(self.data) - (self.head + 1)
+            left = len(self.data) - right
+            num = left + right
+        elif self.head < self.tail:
+            num = self.head - self.tail
+        else: 
+            num =0
+        for i in range(num):
+            if start == len(self.data)-1:
+                if self.data[start] != None:
+                    yield self.data[start]
+                start =0
+            else:
+                if self.data[start] != None:
+                    yield self.data[start]
+                start +=1
         ### END SOLUTION
 
 ################################################################################
