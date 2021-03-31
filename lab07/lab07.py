@@ -67,13 +67,11 @@ class ExtensibleHashTable:
         # END SOLUTION
 
     def __contains__(self, key):
-        hidx = hash(key) % self.n_buckets
-        return self.buckets[hidx][0] == key
-        # try:
-            # _ = self[key]
-            # return True
-        # except:
-            # return False
+        try:
+            _ = self[key]
+            return True
+        except:
+            return False
 
     def __len__(self):
         return self.nitems
